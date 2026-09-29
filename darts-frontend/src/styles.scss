@@ -1,0 +1,445 @@
+@use '@angular/material' as mat;
+
+:root {
+  --surface: #ffffff;
+  --text-primary: #1f2937;
+  --text-muted: #6b7280;
+  --border: #dde3ec;
+  --shadow: 0 0.25rem 0.875rem rgb(15 23 42 / 0.06);
+  --space-1: 0.5rem;
+  --space-2: 0.75rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
+  --radius: 0.75rem;
+  --card-radius: calc(var(--radius) - 0.25rem);
+  --content-max: min(90vw, 88rem);
+  --field-radius: 0.625rem;
+  --field-bg: #f8fafc;
+  --field-bg-hover: #f1f5f9;
+  --field-border: #cbd5e1;
+  --field-border-focus: #64748b;
+  --field-text: #111827;
+  --overlay-surface: #ffffff;
+}
+
+
+@include mat.tooltip-overrides((
+  container-color: #e8e8e8,
+  container-shape: 6px,
+));
+
+@include mat.form-field-overrides((
+  filled-container-color: var(--field-bg),
+  filled-container-shape: var(--field-radius),
+));
+
+@include mat.select-overrides((
+  panel-background-color: var(--overlay-surface),
+  enabled-trigger-text-color: var(--field-text),
+  enabled-arrow-color: var(--text-muted),
+));
+
+@include mat.autocomplete-overrides((
+  background-color: var(--overlay-surface),
+));
+
+@include mat.menu-overrides((
+  container-color: var(--overlay-surface),
+));
+
+@include mat.core-overrides((
+  option-label-text-color: var(--field-text),
+  option-hover-state-layer-color: rgb(148 163 184 / 0.14),
+  option-focus-state-layer-color: rgb(148 163 184 / 0.16),
+  option-selected-state-layer-color: rgb(148 163 184 / 0.2),
+));
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: var(--app-bg);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-width: 64rem;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled {
+  background: var(--field-bg);
+  border: 0.0625rem solid var(--field-border);
+  border-radius: var(--field-radius);
+}
+
+.mat-mdc-form-field .mdc-line-ripple {
+  display: none;
+}
+
+.mat-mdc-form-field .mdc-text-field--filled:hover {
+  background: var(--field-bg-hover);
+}
+
+.mat-mdc-form-field.mat-focused .mdc-text-field--filled,
+.mat-mdc-form-field .mdc-text-field--filled.mdc-text-field--focused {
+  border-color: var(--field-border-focus);
+  box-shadow: 0 0 0 0.125rem rgb(100 116 139 / 0.14);
+}
+
+.mat-mdc-form-field .mdc-floating-label,
+.mat-mdc-select-value,
+.mat-mdc-input-element {
+  color: var(--field-text) !important;
+}
+
+.mat-mdc-select-placeholder,
+.mat-mdc-form-field .mat-mdc-form-field-hint {
+  color: var(--text-muted) !important;
+}
+
+.mat-mdc-option,
+.mat-mdc-menu-item {
+  min-height: 2.25rem !important;
+}
+
+
+.mat-mdc-menu-item:hover,
+.mat-mdc-menu-item.cdk-program-focused,
+.mat-mdc-menu-item.cdk-keyboard-focused,
+.mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled),
+.mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background: #eef2f7 !important;
+}
+
+.mat-mdc-select-panel,
+.mat-mdc-autocomplete-panel,
+.mat-mdc-menu-panel {
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--field-radius) !important;
+  background-color: var(--overlay-surface) !important;
+  box-shadow: 0 0.5rem 1.125rem rgb(15 23 42 / 0.12) !important;
+}
+
+.cdk-overlay-pane .mat-mdc-select-panel,
+.cdk-overlay-pane .mat-mdc-autocomplete-panel,
+.cdk-overlay-pane .mat-mdc-menu-panel {
+  background-color: var(--overlay-surface) !important;
+}
+
+
+.page {
+  width: var(--content-max);
+  margin: var(--space-5) auto;
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.form-page {
+  width: min(90vw, 56rem);
+}
+
+.page-header,
+.page-content {
+  padding: var(--space-4);
+}
+
+.page-content {
+  margin-top: var(--space-2);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.page-toolbar,
+.actions-row,
+.button-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.page-toolbar {
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.actions-row {
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
+.actions-cell {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.actions-cell .button-group {
+  flex-wrap: nowrap;
+}
+
+.action-btn {
+  border: 0.0625rem solid currentColor !important;
+  border-radius: 999rem !important;
+}
+
+.action-btn-neutral {
+  color: #949596 !important;
+  background-color: rgb(55 65 81 / 0.14) !important;
+}
+
+.action-btn-primary {
+  color: #1c1835 !important;
+  background-color: rgba(51, 29, 216, 0.14) !important;
+}
+
+.action-btn-accent {
+  color: #473216 !important;
+  background-color: rgba(175, 131, 30, 0.14) !important;
+}
+
+.action-btn-danger {
+  color: #991b1b !important;
+  background-color: rgb(153 27 27 / 0.14) !important;
+}
+
+.action-btn[disabled] {
+  opacity: 0.45;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: var(--space-3);
+  border-bottom: 0.0625rem solid var(--border);
+  vertical-align: top;
+}
+
+.data-table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.info-tooltip-row {
+  display: flex;
+  justify-content: flex-start;
+  margin: var(--space-3) 0;
+}
+
+.section-title-with-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.info-tooltip-icon {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.card {
+  border: 0.0625rem solid var(--border);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  background: var(--surface);
+}
+
+.empty-block,
+.loading-block,
+.error-block {
+  margin-top: var(--space-3);
+  border-radius: var(--card-radius);
+  padding: var(--space-3);
+}
+
+.empty-block,
+.loading-block {
+  background: #f3f4f6;
+  color: var(--text-muted);
+}
+
+.empty-block {
+  margin-top: 0;
+}
+
+.error-block {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.form-alert {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--card-radius);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 0.0625rem solid transparent;
+  width: 100%;
+}
+
+.form-alert .mat-icon {
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+}
+
+.form-alert-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.grid-2,
+.grid-3,
+.grid-auto {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-auto {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.align-start {
+  justify-content: flex-start;
+}
+
+
+.content-card {
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--card-radius);
+  background: #fff;
+  padding: var(--space-3);
+}
+
+
+.section-gap {
+  margin-top: var(--space-3);
+}
+
+.section-title {
+  margin-top: 0;
+  margin-bottom: 0,5rem;
+}
+
+.list-sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.entity-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: 1rem;
+}
+
+.entity-cards-scroll {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: 0.25rem;
+  margin-bottom: 2rem;
+}
+
+.entity-card {
+  width: 20rem;
+  height: 14rem;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  border: 0.0625rem solid var(--border);
+  border-radius: var(--card-radius);
+  background: var(--surface);
+  padding: var(--space-3);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background-color 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.entity-card:hover {
+  background: #eceef0;
+  border-color: #c8d0dd;
+  box-shadow: 0 0.25rem 0.625rem rgb(15 23 42 / 0.08);
+}
+
+.entity-card:focus-visible {
+  outline: 0.125rem solid #2563eb;
+  outline-offset: 0.125rem;
+}
+
+.entity-title {
+  margin-top: var(--space-2);
+  font-weight: 600;
+}
+
+.entity-meta {
+  margin-top: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entity-card-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}

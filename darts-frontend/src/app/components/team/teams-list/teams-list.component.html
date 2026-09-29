@@ -1,0 +1,64 @@
+<mat-card class="page">
+  <mat-card-header class="page-header">
+    <div class="header-row page-toolbar">
+      <button
+        mat-icon-button
+        type="button"
+        [matTooltip]="'teams.createNew' | t"
+        (click)="redirectToCreateTeam()"
+      >
+        <mat-icon aria-hidden="true">group_add</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    @if (teams.length === 0) {
+      <div class="empty-block">{{ 'teams.none' | t }}</div>
+    }
+    @else {
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>{{ 'teams.header.team' | t }}</th>
+              <th>{{ 'teams.header.player1' | t }}</th>
+              <th>{{ 'teams.header.player2' | t }}</th>
+              <th>{{ 'teams.header.actions' | t }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (team of teams; track team._id) {
+              <tr>
+                <td class="team-name">{{ team?.name || ('common.unknownTeam' | t) }}</td>
+                <td class="player-name">{{ team.players[0] }}</td>
+                <td class="player-name">{{ team.players[1] }}</td>
+                <td class="actions-cell">
+                  <div class="button-group">
+                    <button
+                      mat-icon-button
+                      type="button"
+                      [matTooltip]="'teams.edit' | t"
+                      (click)="redirectToEditTeam(team._id)"
+                    >
+                      <mat-icon aria-hidden="true">edit</mat-icon>
+                    </button>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      [matTooltip]="'teams.delete' | t"
+                      (click)="deleteTeam(team._id)"
+                    >
+                      <mat-icon aria-hidden="true">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

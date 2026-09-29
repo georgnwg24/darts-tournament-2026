@@ -1,0 +1,8 @@
+<div class="container" [class.is-disabled]="!isClickable">
+  <svg
+    #dartboard
+    class="dartboard"
+    [class.is-disabled]="!isClickable"
+    [attr.data-clickable]="isClickable"
+  ></svg>
+</div>

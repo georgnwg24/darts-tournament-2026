@@ -1,0 +1,15 @@
+<div class="overview-tabs-shell">
+  <mat-tab-group [selectedIndex]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
+    <mat-tab [label]="'tabs.teams' | t">
+      <ng-container *ngComponentOutlet="teamsListComponent"></ng-container>
+    </mat-tab>
+
+    <mat-tab [label]="'tabs.games' | t">
+      <ng-container *ngComponentOutlet="gamesListComponent"></ng-container>
+    </mat-tab>
+
+    <mat-tab [label]="'tabs.tournaments' | t">
+      <ng-container *ngComponentOutlet="tournamentsListComponent"></ng-container>
+    </mat-tab>
+  </mat-tab-group>
+</div>

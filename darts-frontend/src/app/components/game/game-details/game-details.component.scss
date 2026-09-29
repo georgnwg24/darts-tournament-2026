@@ -1,0 +1,150 @@
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.left,
+.right {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.card-compact {
+  padding: 0.5rem;
+}
+
+.matchup-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.box-text {
+  min-width: 0;
+  text-align: center;
+  color: #393939;
+  font-weight: bolder;
+}
+
+.text-1 {
+  font-size: 3rem;
+}
+
+.text-2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.text-3 {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  text-align: center;
+  color: #393939;
+  font-weight: bold;
+}
+
+.score-player-name {
+  font-size: 1.5rem;
+}
+
+.score-value {
+  font-size: 4.5rem;
+}
+
+.score-team {
+  display: grid;
+  gap: 0.25rem;
+  border: 0.0625rem solid transparent;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+.score-team-displayed {
+  border-color: #50c36f;
+  background: #f1f9f4;
+  box-shadow: 0 0 0 0.125rem rgb(27 143 58 / 0.2);
+}
+
+.checkout-text {
+  margin-top: 0.5rem;
+  color: #1f6f43;
+  font-weight: 600;
+}
+
+.throw-slots {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.slot,
+.leg-row {
+  border: 0.0625rem solid #dde3ec;
+  border-radius: 0.5rem;
+}
+
+.slot {
+  min-height: 3rem;
+  display: grid;
+  place-items: center;
+  font-weight: 500;
+}
+
+.card-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.throw-slots + .card-actions {
+  margin-top: 2rem;
+}
+
+.action-btn-block {
+  flex: 1;
+}
+
+.progress-text,
+.leg-score {
+  color: #4a5568;
+}
+
+.progress-text {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+}
+
+.game-outcome {
+  min-height: 10rem;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.legs-overview {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.leg-row {
+  padding: 0.625rem 0.75rem;
+}
+
+.leg-score {
+  margin-top: 0.35rem;
+}

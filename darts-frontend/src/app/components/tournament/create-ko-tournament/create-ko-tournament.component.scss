@@ -1,0 +1,51 @@
+.controls-grid {
+  align-items: stretch;
+}
+
+.round-title,
+.settings-title,
+.match-title {
+  margin: 0;
+}
+
+.round-seeding-hint {
+  margin: 0.25rem 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.bracket-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.match-card,
+.settings-card {
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: var(--space-2);
+}
+
+.match-card {
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.match-title {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.slot-field .mat-mdc-form-field-subscript-wrapper {
+  min-height: 0;
+  padding: 0;
+}
+
+.settings-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}

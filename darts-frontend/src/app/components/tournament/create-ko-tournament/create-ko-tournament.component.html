@@ -1,0 +1,173 @@
+<mat-card class="page form-page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'tournaments.form.backToList' | t" (click)="navigateToTournamentList()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ 'tournaments.ko.title' | t }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    <div class="card">
+      @if (isLoadingTeams) {
+        <div class="loading-block">{{ 'common.loading' | t }}</div>
+      } @else if (teams.length === 0) {
+        <p class="form-alert form-alert-error" role="alert">
+          <mat-icon aria-hidden="true">warning</mat-icon>
+          <span>{{ 'tournaments.form.needTeams' | t }}</span>
+        </p>
+
+        <div class="actions-row align-start">
+          <button mat-raised-button type="button" class="action-btn action-btn-primary" (click)="navigateToCreateTeam()">
+            {{ 'common.create' | t }}
+          </button>
+        </div>
+      } @else {
+      <form [formGroup]="koForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width">
+          <mat-label>{{ 'tournaments.form.name' | t }}</mat-label>
+          <input matInput type="text" formControlName="name" [placeholder]="'tournaments.form.namePlaceholder' | t">
+          @if (koForm.get('name')?.hasError('required')) {
+            <mat-error>{{ 'tournaments.form.nameRequired' | t }}</mat-error>
+          }
+          @if (koForm.get('name')?.hasError('maxlength')) {
+            <mat-error>{{ 'tournaments.form.nameMax' | t }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="controls-grid grid-2 section-gap">
+          <mat-form-field>
+            <mat-label>{{ 'tournaments.ko.startingStage' | t }}</mat-label>
+            <mat-select formControlName="startRound">
+              @for (option of startRoundOptions; track option.value) {
+                <mat-option [value]="option.value">{{ option.label | t }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <div [class.enabled]="hasThirdPlaceMatchControl.value">
+            <mat-checkbox
+              formControlName="hasThirdPlaceMatch"
+              [attr.aria-label]="'tournaments.ko.enableThirdPlace' | t"
+            >
+              {{ 'tournaments.ko.thirdPlaceMatch' | t }}
+            </mat-checkbox>
+          </div>
+
+        </div>
+
+        <section class="content-card section-gap" formArrayName="initialSlots">
+          <h3 class="section-title">{{ initialStageTitle | t }}</h3>
+
+          @if (currentStartRound === 'quarterfinal') {
+            <p class="round-seeding-hint">{{ 'tournaments.ko.seedingHint' | t }}</p>
+          }
+
+          <div class="bracket-grid">
+            @for (match of bracketMatches; track $index) {
+              <div class="match-card">
+                <h5 class="match-title">{{ match.title }}</h5>
+
+                <mat-form-field class="slot-field">
+                  <mat-label>{{ 'tournaments.ko.slot' | t:{ number: match.slotAIndex + 1 } }}</mat-label>
+                  <input matInput type="text" [formControlName]="match.slotAIndex" [matAutocomplete]="slotAutoA">
+                  <mat-autocomplete #slotAutoA="matAutocomplete" [displayWith]="displayTeamName">
+                    @for (team of filteredSlotTeams[match.slotAIndex] | async; track team._id) {
+                      <mat-option [value]="team">{{ team.name }} ({{ team.players.join(', ') }})</mat-option>
+                    }
+                  </mat-autocomplete>
+                  @if (initialSlots.at(match.slotAIndex).hasError('invalidTeamSelection')) {
+                    <mat-error>{{ 'tournaments.ko.selectTeamFromList' | t }}</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field class="slot-field">
+                  <mat-label>{{ 'tournaments.ko.slot' | t:{ number: match.slotBIndex + 1 } }}</mat-label>
+                  <input matInput type="text" [formControlName]="match.slotBIndex" [matAutocomplete]="slotAutoB">
+                  <mat-autocomplete #slotAutoB="matAutocomplete" [displayWith]="displayTeamName">
+                    @for (team of filteredSlotTeams[match.slotBIndex] | async; track team._id) {
+                      <mat-option [value]="team">{{ team.name }} ({{ team.players.join(', ') }})</mat-option>
+                    }
+                  </mat-autocomplete>
+                  @if (initialSlots.at(match.slotBIndex).hasError('invalidTeamSelection')) {
+                    <mat-error>{{ 'tournaments.ko.selectTeamFromList' | t }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            }
+          </div>
+
+          @if (initialSlots.hasError('insufficientTeams') && (initialSlots.touched)) {
+            <p class="full-width form-alert form-alert-error" role="alert">
+              <mat-icon aria-hidden="true">error</mat-icon>
+              <span>{{ 'tournaments.ko.minTeams' | t }}</span>
+            </p>
+          }
+
+          @if (initialSlots.hasError('duplicateTeams') && (initialSlots.touched)) {
+            <p class="full-width form-alert form-alert-error" role="alert">
+              <mat-icon aria-hidden="true">error</mat-icon>
+              <span>{{ 'tournaments.ko.uniqueTeams' | t }}</span>
+            </p>
+          }
+        </section>
+
+        <section class="content-card section-gap">
+          <h3 class="section-title section-title-with-info">
+            {{ 'tournaments.ko.stageSettings' | t }}
+            <mat-icon class="info-tooltip-icon" [matTooltip]="'tournaments.ko.stageSettingsInfo' | t" aria-label="Information">help</mat-icon>
+          </h3>
+
+          <div class="settings-grid grid-auto">
+            @for (stageKey of activeStageKeys; track stageKey) {
+              <div class="stage-settings-card" [formGroupName]="stageKey">
+                <h4 class="stage-title">{{ stageLabelMap[stageKey] | t }}</h4>
+
+                <mat-form-field>
+                  <mat-label>{{ 'games.form.legsToWin' | t }}</mat-label>
+                  <input matInput type="number" formControlName="legsToWin" min="1" step="1">
+                  @if (koForm.get(stageKey + '.legsToWin')?.hasError('required')) {
+                    <mat-error>{{ 'games.form.legsToWinRequired' | t }}</mat-error>
+                  }
+                  @if (koForm.get(stageKey + '.legsToWin')?.hasError('min')) {
+                    <mat-error>{{ 'games.form.legsToWinMin' | t }}</mat-error>
+                  }
+                  @if (koForm.get(stageKey + '.legsToWin')?.hasError('integer')) {
+                    <mat-error>{{ 'games.form.legsToWinInteger' | t }}</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>{{ 'games.form.roundLimit' | t }}</mat-label>
+                  <input matInput type="number" formControlName="roundLimit" min="1">
+                  @if (koForm.get(stageKey + '.roundLimit')?.hasError('required')) {
+                    <mat-error>{{ 'games.form.roundLimitRequired' | t }}</mat-error>
+                  }
+                  @if (koForm.get(stageKey + '.roundLimit')?.hasError('min')) {
+                    <mat-error>{{ 'games.form.roundLimitMin' | t }}</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field>
+                  <mat-label>{{ 'games.form.scoreLimit' | t }}</mat-label>
+                  <input matInput type="number" formControlName="scoreLimit" min="1">
+                  @if (koForm.get(stageKey + '.scoreLimit')?.hasError('min')) {
+                    <mat-error>{{ 'games.form.scoreLimitMin' | t }}</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            }
+          </div>
+        </section>
+
+        <div class="actions-row">
+          <button mat-raised-button color="primary" class="action-btn action-btn-primary" type="submit" [disabled]="koForm.invalid">
+            {{ 'tournaments.ko.create' | t }}
+          </button>
+        </div>
+      </form>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,187 @@
+<mat-card class="page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'games.details.goBack' | t" (click)="onBackToGamesTable()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ 'games.details.title' | t }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+@if (!isLoaded) {
+  <div class="loading-block">{{ 'games.details.loading' | t }}</div>
+} @else {
+  <div class="dashboard">
+    <div class="left">
+      @if (game; as g) {
+        <div class="card">
+          <div class="progress-text">
+            {{ firstToText(g.legsToWin) }}
+          </div>
+
+          <div class="matchup-line">
+            <div class="box-text text-2">{{ teamName(g.teamIds[0]) }}</div>
+            <div class="box-text text-3">vs</div>
+            <div class="box-text text-2">{{ teamName(g.teamIds[1]) }}</div>
+          </div>
+
+          <div class="matchup-line">
+            <div class="box-text text-1">{{ showFinishedView ? totalLegWinsForTeam(g.teamIds[0]) : countLegWinsForTeam(g.teamIds[0]) }}</div>
+            <div class="box-text text-2">:</div>
+            <div class="box-text text-1">{{ showFinishedView ? totalLegWinsForTeam(g.teamIds[1]) : countLegWinsForTeam(g.teamIds[1]) }}</div>
+          </div>
+        </div>
+
+        <div class="card">
+          @if (showFinishedView) {
+            <div class="game-outcome">{{ gameOutcomeText }}</div>
+            <div class="card-actions">
+              <button mat-button
+                class="action-btn action-btn-accent action-btn-block"
+                type="button"
+                (click)="onSecondaryClick()"
+                [disabled]="isSecondaryDisabled"
+              >
+                {{ secondaryLabel }}
+              </button>
+
+              <button mat-button
+                class="action-btn action-btn-primary action-btn-block"
+                type="button"
+                (click)="onPrimaryClick()"
+                [disabled]="isPrimaryDisabled"
+              >
+                {{ primaryLabel }}
+              </button>
+            </div>
+          } @else {
+            @if (displayedLeg; as leg) {
+              <div class="progress-text">
+                {{ 'games.details.leg' | t }} {{ (displayedTurn?.legIndex ?? 0) + 1 }} · {{ roundProgressText(leg) }}
+              </div>
+
+              <div class="scores-grid">
+                <div
+                  class="score-team"
+                  [class.score-team-displayed]="isDisplayedTurnTeam(g.teamIds[0])"
+                >
+                  <div class="score-player-name">{{ displayedPlayerNameForTeam(g.teamIds[0]) }}</div>
+                  <div class="score-value">{{ scoreShownForTeam(g.teamIds[0]) }}</div>
+                </div>
+                <div
+                  class="score-team"
+                  [class.score-team-displayed]="isDisplayedTurnTeam(g.teamIds[1])"
+                >
+                  <div class="score-player-name">{{ displayedPlayerNameForTeam(g.teamIds[1]) }}</div>
+                  <div class="score-value">{{ scoreShownForTeam(g.teamIds[1]) }}</div>
+                </div>
+              </div>
+            }
+
+            @if (finishPathText; as pathText) {
+              <div class="checkout-text">
+                {{ 'games.details.pathToFinish' | t:{ path: pathText } }}
+              </div>
+            }
+
+            <div class="throw-slots">
+              @for (i of threeSlots; track i) {
+                <div class="slot">
+                  @if (displayedThrows[i] === undefined) {
+                    <span>-</span>
+                  } @else {
+                    @if (isBustThrow(i)) {
+                      <span>{{ 'games.details.bust' | t }}</span>
+                    } @else {
+                      <span>{{ displayedThrows[i] }}</span>
+                    }
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="card-actions">
+              <button mat-button
+                class="action-btn action-btn-accent action-btn-block"
+                type="button"
+                (click)="onSecondaryClick()"
+                [disabled]="isSecondaryDisabled"
+              >
+                {{ secondaryLabel }}
+              </button>
+
+              <button mat-button
+                class="action-btn action-btn-primary action-btn-block"
+                type="button"
+                (click)="onPrimaryClick()"
+                [disabled]="isPrimaryDisabled"
+              >
+                {{ primaryLabel }}
+              </button>
+            </div>
+
+            @if (isGameLocked) {
+              <strong>
+                {{ 'games.details.locked' | t }}
+              </strong>
+            }
+          }
+        </div>
+      }
+    </div>
+
+    <div class="right">
+      <div class="card card-compact">
+        @if (showFinishedView) {
+          @if (game; as g) {
+            <div class="legs-overview">
+              <h3>{{ 'games.details.legOverview' | t }}</h3>
+              @for (leg of g.legs; track leg._id; let i = $index) {
+                <div class="leg-row">
+                  <div>
+                    <strong>{{ 'games.details.leg' | t }} {{ i + 1 }}:</strong>
+                    {{ legWinnerName(leg) }}
+                  </div>
+                  <div class="leg-score">
+                    {{ teamName(g.teamIds[0]) }} {{ legScoreForTeamById(leg, g.teamIds[0]) }} : {{ legScoreForTeamById(leg, g.teamIds[1]) }} {{ teamName(g.teamIds[1]) }}
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        } @else {
+          <div>
+            <mat-button-toggle-group
+              [value]="inputMethod"
+              (change)="onInputMethodChange($event)"
+              [attr.aria-label]="'games.details.selectInputMethod' | t"
+            >
+              <mat-button-toggle value="dartboard">{{ 'games.details.dartboard' | t }}</mat-button-toggle>
+              <mat-button-toggle value="scorePad">{{ 'games.details.scorePad' | t }}</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          @if (displayedTurn && displayedLeg) {
+            @if (inputMethod === 'dartboard') {
+              <app-dartboard
+                [isClickable]="canRecordThrow"
+                [hitMarkers]="dartboardHitMarkers"
+                (throwRecorded)="onDartboardThrowRecorded($event)"
+              ></app-dartboard>
+            } @else {
+              <app-score-pad
+                [isClickable]="canRecordThrow"
+                (throwRecorded)="onThrowRecorded($event)"
+              ></app-score-pad>
+            }
+          } @else {
+            <div class="empty-block">{{ 'games.details.noActiveTurn' | t }}</div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}
+  </mat-card-content>
+</mat-card>

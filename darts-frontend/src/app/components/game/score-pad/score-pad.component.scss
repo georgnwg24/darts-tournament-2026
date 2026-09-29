@@ -1,0 +1,67 @@
+.score-pad {
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-top: 0.75rem;
+  border: 0.0625rem solid #9ca3af;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.controls-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.score-btn,
+.control-btn {
+  min-height: 4rem;
+  border: 0.0625rem solid #9ca3af;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.score-btn {
+  font-size: 1.35rem;
+  text-transform: none;
+}
+
+.score-btn .projected-score {
+
+  font-size: 0.70rem;
+  opacity: 0.75;
+}
+
+.score-btn.is-unavailable {
+  background: #d1d5db;
+  color: #6b7280;
+}
+
+.control-btn {
+  background: #fde68a;
+  color: #9a3412;
+}
+
+.control-btn.is-active {
+  background: #f59e0b;
+  color: #fff;
+}
+
+.score-pad.is-disabled {
+  filter: grayscale(1) saturate(0) brightness(0.85);
+  opacity: 0.65;
+}
+
+.score-pad.is-disabled .score-btn,
+.score-pad.is-disabled .control-btn {
+  cursor: not-allowed;
+}

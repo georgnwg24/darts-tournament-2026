@@ -1,0 +1,99 @@
+<mat-card class="page">
+  <mat-card-header class="page-header">
+    <div class="header-row page-toolbar">
+        <button
+          mat-icon-button
+          type="button"
+          [matTooltip]="'tournaments.createNew' | t"
+          [matMenuTriggerFor]="createTournamentMenu"
+        >
+          <mat-icon aria-hidden="true">add_2</mat-icon>
+        </button>
+    </div>
+  </mat-card-header>
+
+  <mat-menu #createTournamentMenu="matMenu">
+    <button mat-menu-item type="button" (click)="redirectToCreateKoTournament()">
+      <span>{{ 'tournaments.createKo' | t }}</span>
+    </button>
+    <button mat-menu-item type="button" (click)="redirectToCreateLeagueTournament()">
+      <span>{{ 'tournaments.createLeague' | t }}</span>
+    </button>
+  </mat-menu>
+
+  <mat-card-content class="page-content list-sections">
+    <section class="entity-section">
+      <h3 class="section-title">{{ 'tournaments.active' | t }}</h3>
+      @if (activeTournaments.length > 0) {
+        <div class="entity-cards-scroll">
+          @for (tournament of activeTournaments; track tournament._id) {
+            <article
+              class="entity-card"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'tournaments.openDetails' | t"
+              (click)="redirectToTournamentDetails(tournament._id)"
+              (keydown.enter)="redirectToTournamentDetails(tournament._id)"
+              (keydown.space)="redirectToTournamentDetails(tournament._id); $event.preventDefault()"
+            >
+              <div class="entity-title">{{ tournament.name }}</div>
+              <div class="entity-meta">{{ 'tournaments.card.type' | t }}: {{ tournament.type === 'ko' ? ('tournaments.card.typeKo' | t) : ('tournaments.card.typeLeague' | t) }}</div>
+              <div class="entity-meta">{{ 'tournaments.card.teams' | t: { count: tournament.teamIds.length } }}</div>
+              <div class="entity-meta">{{ teamNames(tournament.teamIds) || ('common.none' | t) }}</div>
+
+              <div class="entity-card-actions" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [matTooltip]="'tournaments.delete' | t"
+                  (click)="deleteTournament(tournament._id)"
+                >
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-block">{{ 'tournaments.noneActive' | t }}</div>
+      }
+    </section>
+
+    <section class="entity-section">
+      <h3 class="section-title">{{ 'tournaments.complete' | t }}</h3>
+      @if (completeTournaments.length > 0) {
+        <div class="entity-cards-scroll">
+          @for (tournament of completeTournaments; track tournament._id) {
+            <article
+              class="entity-card"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'tournaments.openDetails' | t"
+              (click)="redirectToTournamentDetails(tournament._id)"
+              (keydown.enter)="redirectToTournamentDetails(tournament._id)"
+              (keydown.space)="redirectToTournamentDetails(tournament._id); $event.preventDefault()"
+            >
+              <div class="entity-title">{{ tournament.name }}</div>
+              <div class="entity-meta">{{ 'tournaments.card.type' | t }}: {{ tournament.type === 'ko' ? ('tournaments.card.typeKo' | t) : ('tournaments.card.typeLeague' | t) }}</div>
+              <div class="entity-meta">{{ 'tournaments.card.teams' | t: { count: tournament.teamIds.length } }}</div>
+              <div class="entity-meta">{{ teamNames(tournament.teamIds) || ('common.none' | t) }}</div>
+
+              <div class="entity-card-actions" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <button
+                  mat-icon-button
+                  type="button"
+                  [matTooltip]="'tournaments.delete' | t"
+                  (click)="deleteTournament(tournament._id)"
+                >
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-block">{{ 'tournaments.noneComplete' | t }}</div>
+      }
+    </section>
+  </mat-card-content>
+</mat-card>

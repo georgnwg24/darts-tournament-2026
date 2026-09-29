@@ -1,0 +1,185 @@
+<mat-card class="page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'tournaments.form.backToList' | t" (click)="navigateBackToTournaments()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ tournament?.name ?? ('tournaments.details.defaultTitle' | t) }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    @if (isLoading) {
+      <div class="loading-block">{{ 'tournaments.details.loading' | t }}</div>
+    } @else if (!tournament) {
+      <div class="error-block">{{ 'tournaments.details.loadError' | t }}</div>
+    } @else {
+      @if (isKo) {
+        <div class="ko-layout">
+          <section class="card">
+            <div class="section-heading">
+              <h2 class="section-title-lg">{{ 'tournaments.details.knockoutBracket' | t }}</h2>
+              <span class="status-pill" [class]="'status-pill ' + (tournament.status === 'active' ? 'status-active' : 'status-complete')">
+                {{ tournament.status === 'active' ? ('tournaments.details.tournamentActive' | t) : ('tournaments.details.tournamentComplete' | t) }}
+              </span>
+            </div>
+
+            <div class="ko-grid">
+              @for (stage of koStages; track stage.stage) {
+                <div class="ko-stage" [class.ko-stage-active]="stage.status === 'active'">
+                  <div class="stage-header">
+                    <h3 class="stage-title">{{ stageLabel(stage.stage) }}</h3>
+                    <span class="status-pill" [class]="'status-pill ' + stageStatusClass(stage)">
+                      {{ stageStatusLabel(stage) }}
+                    </span>
+                  </div>
+
+                  <div class="stage-matches">
+                    @for (match of stage.matches; track match.matchIndex) {
+                      <button
+                        type="button"
+                        class="ko-match"
+                        [class.ko-match-clickable]="isKoMatchClickable(stage, match)"
+                        [disabled]="!isKoMatchClickable(stage, match)"
+                        (click)="openGameDetails(match.gameId)"
+                      >
+                        <div class="team-line">{{ teamName(match.slotA) }}</div>
+                        <div class="team-line">{{ teamName(match.slotB) }}</div>
+                        <div class="match-meta">
+                          <span>{{ koMatchResult(match) }}</span>
+                          @if (koMatchWinnerLabel(match); as winnerLabel) {
+                            <span>{{ winnerLabel }}</span>
+                          }
+                        </div>
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+
+          @if (showKoPodium) {
+            <section class="card podium-card">
+              <div class="podium-wrap">
+                @for (placement of koPodiumPlacements; track placement.label; let i = $index) {
+                  <div class="podium-slot" [ngClass]="'podium-slot-' + (i + 1)">
+                    <div class="podium-team">{{ teamName(placement.teamId) }}</div>
+                    <div class="podium-block">
+                      <mat-icon class="podium-icon">{{ placement.icon }}</mat-icon>
+                      <span>{{ placement.label }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <div class="actions-row">
+            <button
+              mat-raised-button
+              type="button"
+              class="action-btn action-btn-primary"
+              [disabled]="!canAdvanceTournament"
+              (click)="advanceTournament()"
+            >
+              {{ advanceButtonLabel }}
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (isLeague) {
+        <div class="league-layout">
+          <section class="card">
+            <div class="section-heading">
+              <h2 class="section-title-lg section-title-with-info">
+                {{ 'tournaments.details.leagueTable' | t }}
+                <mat-icon class="info-tooltip-icon" [matTooltip]="'tournaments.details.leagueTableInfo' | t" aria-label="Information">help</mat-icon>
+              </h2>
+              <span class="status-pill" [class]="'status-pill ' + (tournament.status === 'active' ? 'status-active' : 'status-complete')">
+                {{ tournament.status === 'active' ? ('tournaments.details.tournamentActive' | t) : ('tournaments.details.tournamentComplete' | t) }}
+              </span>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{{ 'teams.header.team' | t }}</th>
+                    <th>P</th>
+                    <th>Pts</th>
+                    <th>Avg/Turn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of leagueTableRows; track row.teamId; let i = $index) {
+                    <tr>
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ teamName(row.teamId) }}</td>
+                      <td>{{ row.gamesPlayed }}</td>
+                      <td>{{ row.points }}</td>
+                      <td>{{ row.avgPerTurn | number:'1.2-2' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card">
+            <div class="matchday-toolbar">
+              <button mat-icon-button type="button" (click)="previousMatchday()" [disabled]="!canGoToPreviousMatchday" [attr.aria-label]="'tournaments.details.previousMatchday' | t">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+
+              <div class="matchday-title">
+                {{ 'tournaments.details.matchdayXofY' | t:{ current: viewedMatchday?.matchdayNumber ?? 0, total: matchdays.length } }}
+              </div>
+
+              <button mat-icon-button type="button" (click)="nextMatchday()" [disabled]="!canGoToNextMatchday" [attr.aria-label]="'tournaments.details.nextMatchday' | t">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+
+            @if (viewedMatchday; as day) {
+              <div class="league-matches">
+                @for (match of day.matches; track match.matchIndex) {
+                  <button
+                    type="button"
+                    class="league-match"
+                    [class.league-match-clickable]="isViewedMatchdayActive()"
+                    [disabled]="!isViewedMatchdayActive()"
+                    (click)="openGameDetails(match.gameId)"
+                  >
+                    <div class="league-line">
+                      <span>{{ teamName(match.homeTeamId) }}</span>
+                      <span class="result">{{ leagueMatchResult(match.gameId) }}</span>
+                      <span class="league-team-away">{{ teamName(match.awayTeamId) }}</span>
+                    </div>
+                    <div class="league-meta">{{ leagueMatchStatus(match.gameId) }}</div>
+                  </button>
+                }
+              </div>
+
+              <div class="actions-row matchday-actions">
+                <button
+                  mat-raised-button
+                  type="button"
+                  class="action-btn action-btn-primary"
+                  [disabled]="!canAdvanceTournament"
+                  (click)="advanceTournament()"
+                >
+                  {{ advanceButtonLabel }}
+                </button>
+              </div>
+            } @else {
+              <div class="empty-block">{{ 'tournaments.details.noMatchdays' | t }}</div>
+            }
+          </section>
+        </div>
+      }
+    }
+  </mat-card-content>
+</mat-card>

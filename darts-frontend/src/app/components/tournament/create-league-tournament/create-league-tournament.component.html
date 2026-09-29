@@ -1,0 +1,136 @@
+<mat-card class="page form-page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'tournaments.form.backToList' | t" (click)="navigateToTournamentList()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ 'tournaments.league.title' | t }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    <div class="card">
+      @if (isLoadingTeams) {
+        <div class="loading-block">{{ 'common.loading' | t }}</div>
+      } @else if (teams.length === 0) {
+        <p class="form-alert form-alert-error" role="alert">
+          <mat-icon aria-hidden="true">warning</mat-icon>
+          <span>{{ 'tournaments.form.needTeams' | t }}</span>
+        </p>
+
+        <div class="actions-row align-start">
+          <button mat-raised-button type="button" class="action-btn action-btn-primary" (click)="navigateToCreateTeam()">
+            {{ 'common.create' | t }}
+          </button>
+        </div>
+      } @else {
+      <form [formGroup]="leagueForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width">
+          <mat-label>{{ 'tournaments.form.name' | t }}</mat-label>
+          <input matInput type="text" formControlName="name" [placeholder]="'tournaments.form.namePlaceholder' | t">
+          @if (leagueForm.get('name')?.hasError('required')) {
+            <mat-error>{{ 'tournaments.form.nameRequired' | t }}</mat-error>
+          }
+          @if (leagueForm.get('name')?.hasError('maxlength')) {
+            <mat-error>{{ 'tournaments.form.nameMax' | t }}</mat-error>
+          }
+        </mat-form-field>
+
+        <section class="content-card section-gap">
+          <h3 class="section-title">{{ 'tournaments.league.selectTeams' | t }}</h3>
+
+          <div class="actions-row align-start selection-actions">
+            <button mat-stroked-button type="button" class="action-btn action-btn-primary" [disabled]="areAllTeamsSelected" (click)="selectAllTeams()">
+              {{ 'tournaments.league.selectAll' | t }}
+            </button>
+            <button mat-stroked-button type="button" class="action-btn action-btn-primary" [disabled]="areNoTeamsSelected" (click)="clearTeamSelection()">
+              {{ 'tournaments.league.selectNone' | t }}
+            </button>
+          </div>
+
+          <div class="team-grid grid-2">
+            @for (team of teams; track team._id) {
+              <mat-checkbox [checked]="isSelected(team._id)" (change)="toggleTeamSelection(team._id, $event.checked)">
+                {{ team.name }} ({{ team.players.join(', ') }})
+              </mat-checkbox>
+            }
+          </div>
+
+          @if (teamIdsControl.hasError('insufficientTeams') && (teamIdsControl.touched)) {
+            <p class="full-width form-alert form-alert-error" role="alert">
+              <mat-icon aria-hidden="true">error</mat-icon>
+              <span>{{ 'tournaments.league.minTeams' | t }}</span>
+            </p>
+          }
+
+          @if (leagueForm.hasError('infeasibleLeague') && (leagueForm.touched || leagueForm.dirty)) {
+            <p class="full-width form-alert form-alert-error" role="alert">
+              <mat-icon aria-hidden="true">error</mat-icon>
+              <span>{{ 'tournaments.league.feasible' | t }}</span>
+            </p>
+          }
+        </section>
+
+        <section class="content-card section-gap">
+          <h3 class="section-title section-title-with-info">
+            {{ 'tournaments.league.settings' | t }}
+            <mat-icon class="info-tooltip-icon" [matTooltip]="'tournaments.league.settingsInfo' | t" aria-label="Information">help</mat-icon>
+          </h3>
+
+          <div class="settings-grid grid-2">
+            <mat-form-field>
+              <mat-label>{{ 'tournaments.league.gamesPerTeam' | t }}</mat-label>
+              <input matInput type="number" formControlName="gamesPerTeam" min="1">
+              @if (leagueForm.get('gamesPerTeam')?.hasError('required')) {
+                <mat-error>{{ 'tournaments.league.gamesPerTeamRequired' | t }}</mat-error>
+              }
+              @if (leagueForm.get('gamesPerTeam')?.hasError('min')) {
+                <mat-error>{{ 'tournaments.league.gamesPerTeamMin' | t }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>{{ 'games.form.legsToWin' | t }}</mat-label>
+              <input matInput type="number" formControlName="legsToWin" min="1" step="1">
+              @if (leagueForm.get('legsToWin')?.hasError('required')) {
+                <mat-error>{{ 'games.form.legsToWinRequired' | t }}</mat-error>
+              }
+              @if (leagueForm.get('legsToWin')?.hasError('min')) {
+                <mat-error>{{ 'games.form.legsToWinMin' | t }}</mat-error>
+              }
+              @if (leagueForm.get('legsToWin')?.hasError('integer')) {
+                <mat-error>{{ 'games.form.legsToWinInteger' | t }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>{{ 'games.form.roundLimit' | t }}</mat-label>
+              <input matInput type="number" formControlName="roundLimit" min="1">
+              @if (leagueForm.get('roundLimit')?.hasError('required')) {
+                <mat-error>{{ 'games.form.roundLimitRequired' | t }}</mat-error>
+              }
+              @if (leagueForm.get('roundLimit')?.hasError('min')) {
+                <mat-error>{{ 'games.form.roundLimitMin' | t }}</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>{{ 'games.form.scoreLimit' | t }}</mat-label>
+              <input matInput type="number" formControlName="scoreLimit" min="1">
+              @if (leagueForm.get('scoreLimit')?.hasError('min')) {
+                <mat-error>{{ 'games.form.scoreLimitMin' | t }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        </section>
+
+        <div class="actions-row">
+          <button mat-raised-button color="primary" class="action-btn action-btn-primary" type="submit" [disabled]="leagueForm.invalid">
+            {{ 'tournaments.league.create' | t }}
+          </button>
+        </div>
+      </form>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

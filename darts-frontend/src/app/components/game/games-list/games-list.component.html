@@ -1,0 +1,87 @@
+<mat-card class="page">
+  <mat-card-header class="page-header">
+    <div class="header-row page-toolbar">
+        <button mat-icon-button type="button" [matTooltip]="'games.createNew' | t" (click)="redirectToCreateGame()">
+          <mat-icon aria-hidden="true">add_2</mat-icon>
+        </button>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content list-sections">
+    <section class="entity-section">
+      <h3 class="section-title">{{ 'games.active' | t }}</h3>
+      @if (activeGames.length > 0) {
+        <div class="entity-cards-scroll">
+          @for (item of activeGames; track item.game._id) {
+            <article
+              class="entity-card"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'games.openDetails' | t"
+              (click)="redirectToGameDetails(item.game._id)"
+              (keydown.enter)="redirectToGameDetails(item.game._id)"
+              (keydown.space)="redirectToGameDetails(item.game._id); $event.preventDefault()"
+            >
+              <div class="entity-title">{{ item.team1?.name || ('common.unknownTeam' | t) }} vs {{ item.team2?.name || ('common.unknownTeam' | t) }}</div>
+              <div class="entity-meta">{{ 'games.card.legWins' | t }}: {{ item.team1LegWins }} - {{ item.team2LegWins }}</div>
+              <div class="entity-meta">
+                @if (item.legsToWin; as legsToWin) {
+                  {{ 'games.card.firstTo' | t:{ count: legsToWin } }}
+                } @else {
+                  {{ 'common.none' | t }}
+                }
+              </div>
+              <div class="entity-meta">{{ 'games.card.scoreLimit' | t }}: {{ item.game.scoreLimit ?? ('common.none' | t) }}</div>
+
+              <div class="entity-card-actions" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <button mat-icon-button type="button" [matTooltip]="'games.delete' | t" (click)="deleteGame(item.game._id)">
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-block">{{ 'games.noneActive' | t }}</div>
+      }
+    </section>
+
+    <section class="entity-section">
+      <h3 class="section-title">{{ 'games.complete' | t }}</h3>
+      @if (completeGames.length > 0) {
+        <div class="entity-cards-scroll">
+          @for (item of completeGames; track item.game._id) {
+            <article
+              class="entity-card"
+              role="button"
+              tabindex="0"
+              [attr.aria-label]="'games.openDetails' | t"
+              (click)="redirectToGameDetails(item.game._id)"
+              (keydown.enter)="redirectToGameDetails(item.game._id)"
+              (keydown.space)="redirectToGameDetails(item.game._id); $event.preventDefault()"
+            >
+              <div class="entity-title">{{ item.team1?.name || ('common.unknownTeam' | t) }} vs {{ item.team2?.name || ('common.unknownTeam' | t) }}</div>
+              <div class="entity-meta">{{ 'games.card.legWins' | t }}: {{ item.team1LegWins }} - {{ item.team2LegWins }}</div>
+              <div class="entity-meta">
+                @if (item.legsToWin; as legsToWin) {
+                  {{ 'games.card.firstTo' | t:{ count: legsToWin } }}
+                } @else {
+                  {{ 'common.none' | t }}
+                }
+              </div>
+              <div class="entity-meta">{{ 'games.card.scoreLimit' | t }}: {{ item.game.scoreLimit ?? ('common.none' | t) }}</div>
+
+              <div class="entity-card-actions" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+                <button mat-icon-button type="button" [matTooltip]="'games.delete' | t" (click)="deleteGame(item.game._id)">
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+      } @else {
+        <div class="empty-block">{{ 'games.noneComplete' | t }}</div>
+      }
+    </section>
+  </mat-card-content>
+</mat-card>

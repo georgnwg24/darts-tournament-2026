@@ -1,0 +1,68 @@
+<div class="score-pad" [class.is-disabled]="!isClickable">
+  <div class="score-grid">
+    @for (row of rows; track $index) {
+      @for (value of row; track value) {
+        <button
+          type="button"
+          class="score-btn"
+          [class.is-unavailable]="isScoreDisabled(value)"
+          [disabled]="isScoreDisabled(value)"
+          (click)="pickScore(value)"
+        >
+          {{ value }}
+          @if (shouldShowProjectedValue(value)) {
+            <span class="projected-score">({{ displayedValue(value) }})</span>
+          }
+        </button>
+      }
+    }
+  </div>
+
+  <div class="controls-row">
+    <button
+      type="button"
+      class="score-btn"
+      [class.is-unavailable]="isScoreDisabled(25)"
+      [disabled]="isScoreDisabled(25)"
+      (click)="pickScore(25)"
+    >
+      25
+      @if (shouldShowProjectedValue(25)) {
+        <span class="projected-score">({{ displayedValue(25) }})</span>
+      }
+    </button>
+
+    <button
+      type="button"
+      class="score-btn"
+      [class.is-unavailable]="isScoreDisabled(0)"
+      [disabled]="isScoreDisabled(0)"
+      (click)="pickScore(0)"
+    >
+      0
+      @if (shouldShowProjectedValue(0)) {
+        <span class="projected-score">({{ displayedValue(0) }})</span>
+      }
+    </button>
+
+    <button
+      type="button"
+      class="control-btn"
+      [class.is-active]="multiplier === 2"
+      [disabled]="!isClickable"
+      (click)="selectMultiplier(2)"
+    >
+      {{ 'games.scorePad.double' | t }}
+    </button>
+
+    <button
+      type="button"
+      class="control-btn"
+      [class.is-active]="multiplier === 3"
+      [disabled]="!isClickable"
+      (click)="selectMultiplier(3)"
+    >
+      {{ 'games.scorePad.triple' | t }}
+    </button>
+  </div>
+</div>

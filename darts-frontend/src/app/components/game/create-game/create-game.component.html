@@ -1,0 +1,162 @@
+<mat-card class="page form-page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'games.form.backToList' | t" (click)="navigateToGamesList()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ 'games.form.createTitle' | t }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    <div class="card">
+      @if (isLoadingTeams) {
+        <div class="loading-block">{{ 'common.loading' | t }}</div>
+      } @else if (teams.length === 0) {
+        <p class="form-alert form-alert-error" role="alert">
+          <mat-icon aria-hidden="true">warning</mat-icon>
+          <span>{{ 'games.form.needTeams' | t }}</span>
+        </p>
+
+        <div class="actions-row align-start">
+          <button mat-raised-button type="button" class="action-btn action-btn-primary" (click)="navigateToCreateTeam()">
+            {{ 'common.create' | t }}
+          </button>
+        </div>
+      } @else {
+      <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+        <div class="teams-container grid-2">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'games.form.startingTeam' | t }}</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="startingTeamId"
+              [placeholder]="'games.form.selectStartingTeam' | t"
+              [matAutocomplete]="startingTeamAuto"
+            >
+            <mat-autocomplete #startingTeamAuto="matAutocomplete" [displayWith]="displayTeamName">
+              @for (team of filteredStartingTeams | async; track team._id) {
+                <mat-option [value]="team">
+                  {{ team.name }} ({{ team.players.join(', ') }})
+                </mat-option>
+              }
+            </mat-autocomplete>
+            @if (gameForm.get('startingTeamId')?.hasError('required')) {
+              <mat-error>
+                {{ 'games.form.startingTeamRequired' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'games.form.opposingTeam' | t }}</mat-label>
+            <input
+              type="text"
+              matInput
+              formControlName="opposingTeamId"
+              [placeholder]="'games.form.selectOpposingTeam' | t"
+              [matAutocomplete]="opposingTeamAuto"
+            >
+            <mat-autocomplete #opposingTeamAuto="matAutocomplete" [displayWith]="displayTeamName">
+              @for (team of filteredOpposingTeams | async; track team._id) {
+                <mat-option [value]="team">
+                  {{ team.name }} ({{ team.players.join(', ') }})
+                </mat-option>
+              }
+            </mat-autocomplete>
+            @if (gameForm.get('opposingTeamId')?.hasError('required')) {
+              <mat-error>
+                {{ 'games.form.opposingTeamRequired' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (shouldShowTeamMatchError) {
+          <p class="full-width form-alert form-alert-error" role="alert" aria-live="polite">
+            <mat-icon aria-hidden="true">error</mat-icon>
+            <span>{{ 'games.form.teamsDifferent' | t }}</span>
+          </p>
+        }
+
+        <div class="info-tooltip-row">
+          <mat-icon class="info-tooltip-icon" [matTooltip]="'games.form.settingsInfo' | t" aria-label="Information">help</mat-icon>
+        </div>
+
+        <div class="settings-container grid-3">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'games.form.legsToWin' | t }}</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="legsToWin"
+              [placeholder]="'games.form.enterLegsToWin' | t"
+              min="1"
+              step="1"
+            >
+            @if (gameForm.get('legsToWin')?.hasError('required')) {
+              <mat-error>
+                {{ 'games.form.legsToWinRequired' | t }}
+              </mat-error>
+            }
+            @if (gameForm.get('legsToWin')?.hasError('min')) {
+              <mat-error>
+                {{ 'games.form.legsToWinMin' | t }}
+              </mat-error>
+            }
+            @if (gameForm.get('legsToWin')?.hasError('integer')) {
+              <mat-error>
+                {{ 'games.form.legsToWinInteger' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'games.form.roundLimit' | t }}</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="roundLimit"
+              [placeholder]="'games.form.enterRoundLimit' | t"
+              min="1"
+            >
+            @if (gameForm.get('roundLimit')?.hasError('required')) {
+              <mat-error>
+                {{ 'games.form.roundLimitRequired' | t }}
+              </mat-error>
+            }
+            @if (gameForm.get('roundLimit')?.hasError('min')) {
+              <mat-error>
+                {{ 'games.form.roundLimitMin' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'games.form.scoreLimit' | t }}</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="scoreLimit"
+              [placeholder]="'games.form.enterScoreLimit' | t"
+              min="1"
+            >
+            @if (gameForm.get('scoreLimit')?.hasError('min')) {
+              <mat-error>
+                {{ 'games.form.scoreLimitMin' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="actions-row">
+          <button mat-raised-button color="primary" class="action-btn action-btn-primary" type="submit" [disabled]="gameForm.invalid">
+            {{ 'common.create' | t }}
+          </button>
+        </div>
+      </form>
+      }
+    </div>
+  </mat-card-content>
+</mat-card>

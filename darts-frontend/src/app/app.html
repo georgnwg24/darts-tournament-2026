@@ -1,0 +1,12 @@
+<div class="language-switcher">
+  <select
+    [value]="i18nService.currentLanguage()"
+    [attr.aria-label]="'app.language' | t"
+    (change)="setLanguage($event)"
+  >
+    <option value="en">{{ 'app.lang.en' | t }}</option>
+    <option value="de">{{ 'app.lang.de' | t }}</option>
+  </select>
+</div>
+
+<router-outlet></router-outlet>

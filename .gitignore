@@ -1,0 +1,9 @@
+# IDE/editor settings
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+TURNIERBERICHT_2026.txt

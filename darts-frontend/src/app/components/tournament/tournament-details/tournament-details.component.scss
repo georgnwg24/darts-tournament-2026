@@ -1,0 +1,218 @@
+.section-heading,
+.stage-header,
+.match-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-heading {
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.section-title-lg,
+.stage-title {
+  margin: 0;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status-active {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.status-complete {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status-pending {
+  color: #6b7280;
+  background: #e5e7eb;
+}
+
+.ko-layout,
+.ko-grid,
+.stage-matches,
+.league-matches {
+  display: grid;
+  gap: 1rem;
+}
+
+.ko-grid {
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.ko-stage,
+.ko-match,
+.league-match {
+  border: 0.0625rem solid var(--border);
+  border-radius: 0.65rem;
+}
+
+.ko-stage {
+  padding: 0.75rem;
+  background: #fff;
+}
+
+.ko-stage-active {
+  border-color: #93c5fd;
+  box-shadow: 0 0 0 0.125rem rgb(147 197 253 / 0.35);
+  background: #f8fbff;
+}
+
+.stage-header {
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ko-match,
+.league-match {
+  width: 100%;
+  background: #f8fafc;
+  text-align: left;
+  padding: 0.7rem;
+}
+
+.ko-match {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.ko-match-clickable,
+.league-match-clickable {
+  cursor: pointer;
+}
+
+.ko-match-clickable:hover,
+.league-match-clickable:hover {
+  background: #eef4ff;
+}
+
+.team-line {
+  font-weight: 500;
+}
+
+.match-meta {
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.league-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 1rem;
+}
+
+.matchday-toolbar,
+.league-line {
+  display: grid;
+  align-items: center;
+}
+
+.matchday-toolbar {
+  grid-template-columns: auto 1fr auto;
+  margin-bottom: 0.75rem;
+}
+
+.matchday-title {
+  text-align: center;
+  font-weight: 600;
+}
+
+.league-line {
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.75rem;
+}
+
+.league-team-away {
+  text-align: right;
+}
+
+.result {
+  font-weight: 700;
+}
+
+.league-meta {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.matchday-actions {
+  margin-top: 1rem;
+}
+
+.podium-card {
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 80%, rgb(133 216 249 / 0.25), transparent 40%),
+    radial-gradient(circle at 90% 10%, rgb(250 107 18 / 0.189), transparent 45%),
+    linear-gradient(145deg, #91c4fa30 0%, #ffaa004f 50%, #f9161624 100%);
+}
+
+.podium-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(6rem, 1fr));
+  align-items: end;
+  gap: 1rem;
+  min-height: 16rem;
+}
+
+.podium-slot,
+.podium-block {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.podium-team {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  min-height: 2.4rem;
+  display: grid;
+  place-items: center;
+  text-shadow: 0 0.2rem 0.7rem rgb(0 0 0 / 0.45);
+}
+
+.podium-block {
+  border-radius: 0.9rem 0.9rem 0.3rem 0.3rem;
+  padding: 0.8rem 0.6rem;
+  place-items: center;
+  color: #000;
+  font-weight: 800;
+  box-shadow:
+    0 0.9rem 1.4rem rgb(15 23 42 / 0.45),
+    inset 0 0.1rem 0.4rem rgb(255 255 255 / 0.6);
+}
+
+.podium-slot-1 .podium-block {
+  min-height: 6.8rem;
+  background: linear-gradient(180deg, #eef5ff 0%, #93c5fd 100%);
+}
+
+.podium-slot-2 .podium-block {
+  min-height: 10rem;
+  background: linear-gradient(180deg, #fef6ba 0%, #ffa50a 100%);
+}
+
+.podium-slot-3 .podium-block {
+  min-height: 5.6rem;
+  background: linear-gradient(180deg, #ffe4c5 0%, #fb823c 100%);
+}
+
+.podium-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+}

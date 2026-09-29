@@ -1,0 +1,76 @@
+<mat-card class="page form-page">
+  <mat-card-header class="page-header">
+    <div class="header-row">
+      <button mat-icon-button type="button" [attr.aria-label]="'teams.form.backToList' | t" (click)="navigateToTeamsList()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="page-title">{{ isEditMode ? ('teams.form.editTitle' | t) : ('teams.form.createTitle' | t) }}</h1>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content class="page-content">
+    <div class="card">
+      <form [formGroup]="teamForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width">
+          <mat-label>{{ 'teams.form.teamName' | t }}</mat-label>
+          <input matInput formControlName="teamName" [placeholder]="'teams.form.teamNamePlaceholder' | t">
+          @if (teamForm.get('teamName')?.hasError('required')) {
+            <mat-error>
+              {{ 'teams.form.teamNameRequired' | t }}
+            </mat-error>
+          }
+
+          @if (teamForm.get('teamName')?.hasError('maxlength')) {
+            <mat-error>
+              {{ 'teams.form.teamNameMax' | t }}
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <div class="player-fields-container grid-2">
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'teams.header.player1' | t }}</mat-label>
+            <input matInput formControlName="player1" [placeholder]="'teams.form.playerNamePlaceholder' | t">
+            @if (teamForm.get('player1')?.hasError('required')) {
+              <mat-error>
+                {{ 'teams.form.playerNameRequired' | t }}
+              </mat-error>
+            }
+            @if (teamForm.get('player1')?.hasError('maxlength')) {
+              <mat-error>
+                {{ 'teams.form.playerNameMax' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>{{ 'teams.header.player2' | t }}</mat-label>
+            <input matInput formControlName="player2" [placeholder]="'teams.form.playerNamePlaceholder' | t">
+            @if (teamForm.get('player2')?.hasError('required')) {
+              <mat-error>
+                {{ 'teams.form.playerNameRequired' | t }}
+              </mat-error>
+            }
+            @if (teamForm.get('player2')?.hasError('maxlength')) {
+              <mat-error>
+                {{ 'teams.form.playerNameMax' | t }}
+              </mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (teamForm.hasError('playersMatch')) {
+          <mat-error class="full-width error-message">
+            {{ 'teams.form.playersMustDiffer' | t }}
+          </mat-error>
+        }
+
+        <div class="actions-row">
+          <button mat-raised-button color="primary" class="action-btn action-btn-primary" type="submit" [disabled]="teamForm.invalid">
+            {{ isEditMode ? ('common.update' | t) : ('common.create' | t) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card-content>
+</mat-card>

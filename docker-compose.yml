@@ -1,0 +1,35 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: darts-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build:
+      context: ./darts-backend
+      dockerfile: Dockerfile
+    container_name: darts-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGO_URI: mongodb://mongo:27017/darts
+    depends_on:
+      - mongo
+    ports:
+      - "3000:3000"
+
+  frontend:
+    build:
+      context: ./darts-frontend
+      dockerfile: Dockerfile
+    container_name: darts-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  mongo_data:
